@@ -22,10 +22,12 @@ with open(INPUT_CSV, 'r') as csv_file:
         print(row)
         data_dict[row[2]].append(float(row[1]))
     
+# calculate average rating of movies per year
 average_rating=[]
 for ratings in list(data_dict.values()):
     average_rating.append(round(sum(ratings)/len(ratings),1))
 
+# plot average rating using line chart
 plt.plot(list(data_dict),average_rating)
 plt.title('Average rating per year')
 plt.ylabel('IMDb rating')

@@ -25,13 +25,8 @@ def extract_movies(dom):
     - Actors/actresses (comma separated if more than one)
     - Runtime (only a number!)
     """
-
-    # ADD YOUR CODE HERE TO EXTRACT THE ABOVE INFORMATION ABOUT THE
-    # HIGHEST RATED MOVIES
-    # NOTE: FOR THIS EXERCISE YOU ARE ALLOWED (BUT NOT REQUIRED) TO IGNORE
-    # UNICODE CHARACTERS AND SIMPLY LEAVE THEM OUT OF THE OUTPUT.
-    
-    # get titles
+   
+    # get movie titles
     titles_list=[]
     for titles in dom.find_all("h3"):
         for titles in titles.find_all("a"):
@@ -39,20 +34,20 @@ def extract_movies(dom):
             titles_list.append(titles)
     
     
-    # get ratings
+    # get movie ratings
     ratings_list=[]
     for ratings in dom.find_all("span", "value"):
         ratings=float(ratings.contents[0])
         ratings_list.append(ratings)
         
-    # get years
+    # get years of release for movies
     years_list=[]
     for years in dom.find_all("h3"):
         for new_year in years.find_all("span", class_="lister-item-year text-muted unbold"):
             new_year=new_year.get_text()
             years_list.append(new_year[-5:-1])
             
-    # get actors
+    # get actors of movies
     actors_list=[]
     for movie_content in dom.find_all("div", class_='lister-item-content'):
         movie_actors_list=[]
@@ -61,7 +56,7 @@ def extract_movies(dom):
                 movie_actors_list.append(actor.get_text())
         actors_list.append(movie_actors_list)     
               
-    # get runtime  
+    # get runtime of movies 
     runtime_list=[]
     for runtime in dom.find_all('span', class_ = 'runtime'):
         runtime=runtime.get_text()
