@@ -1,0 +1,6 @@
+1.	For the === operator the values must be equal in type as well
+2.	A closure can make a global variable local
+3.	Functions that operate on other functions
+4.	The querySelector() method returns the first element that is equal to the selector(s)
+    a.	bestand.querySelector(".voorbeeld");
+    In the file “bestand” the program looks for the first element in the file with the class “voorbeeld” and returns the element.

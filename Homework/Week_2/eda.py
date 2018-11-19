@@ -68,7 +68,7 @@ def present(df):
     Save specific columns in JSON
     """
     adjusted_df = df.drop(df.columns[[2, 3, 5, 6, 9, 10, 11 ,12, 13, 14, 15, 16, 17, 18, 19]], axis=1)
-    adjusted_df.set_index("Country").to_json('JSON_file.json', orient='index')
+    adjusted_df.to_json('JSON_file.json', orient='index')
 
 if __name__=="__main__":
     df=parse(INPUT)
