@@ -1,0 +1,33 @@
+<!--/usr/bin/env python
+Name: Max Baneke
+Student number: 10797564 -->
+
+<head>
+    <title>
+    <title>
+</head>
+<body>
+<canvas>
+
+</canvas>
+<script>
+console.log("Hello world!");
+
+//code to load JSON in browser
+
+var fileName = "JSON_file.json";
+var txtFile = new XMLHttpRequest();
+txtFile.onreadystatechange = function() {
+    if (txtFile.readyState === 4 && txtFile.status == 200) {
+        console.log(JSON.parse(txtFile.responseText));
+    }
+}
+txtFile.open("GET", fileName);
+txtFile.send();  
+        
+
+
+
+        
+</script>
+</body>
