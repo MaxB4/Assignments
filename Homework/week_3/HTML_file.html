@@ -1,33 +1,114 @@
-<!--/usr/bin/env python
+<!-- 
 Name: Max Baneke
-Student number: 10797564 -->
-
+Student number: 10797564
+Program plots a line chart using HTML
+-->
+<!DOCTYPE HTML>
+<html>
 <head>
-    <title>
-    <title>
+    <title>Canvas</title>
+    <style>
+        canvas {border: 1px solid black;}
+    </style>
 </head>
-<body>
-<canvas>
+<body style="background-color:rgb(255, 255, 255);">
+    <h1 style="text-align:center;">Line chart</h1>
+    <canvas width="1000" height= "500" id="myCanvas"></canvas>
+    <script>
+        // load JSON in browser
+        var fileName = "data.json";
+        var txtFile = new XMLHttpRequest();
+        txtFile.onreadystatechange = function() {
+            if (txtFile.readyState === 4 && txtFile.status == 200) {
+                var debtData = JSON.parse(txtFile.responseText);
+                                
+                var yearValues = Object.keys(debtData).map(function(item) {return item.substring(0,4)})
+                var debtValues = Object.values(debtData).map(function(item) {return item["GGGDTAITA188N"]})
 
-</canvas>
-<script>
-console.log("Hello world!");
+                console.log(yearValues)
+                console.log(debtValues)
 
-//code to load JSON in browser
+                var linTransform = createTransform([0, 950], [0, 400])
 
-var fileName = "JSON_file.json";
-var txtFile = new XMLHttpRequest();
-txtFile.onreadystatechange = function() {
-    if (txtFile.readyState === 4 && txtFile.status == 200) {
-        console.log(JSON.parse(txtFile.responseText));
-    }
-}
-txtFile.open("GET", fileName);
-txtFile.send();  
-        
+                ctx.beginPath();
+                ctx.moveTo(250, 400 - debtValues[0]*2);
+                // set line color
+                ctx.strokeStyle = '#ff0000';
+      
+                for(var i = 1; i < yearValues.length; i++) {
+                    ctx.lineTo(250+linTransform(i)*60, 400 - debtValues[i]*2)
+                }
+                ctx.stroke()
+                
+            }
+        }
+        txtFile.open("GET", fileName);
+        txtFile.send();      
+  
+        // draw in canvas 
+        var canvas = document.getElementById("myCanvas");
+        var ctx = canvas.getContext("2d");
+        var style = canvas.style;
+        canvas.style = "position:absolute; left: 50%; width: 1000px; margin-left: -500px;";
+
+        // set axis labels
+        ctx.font = "15px Arial";
+        ctx.fillText("Date",960,420); 
+
+        ctx.font = "15px Arial";
+        ctx.fillText("GVNMT Debt",150,40); 
+
+        ctx.font = "15px Arial";
+        var i;
+        var j = 248;
+        for (i = 0; i<11; i++) { 
+            ctx.fillText("|",j,411);
+            j = j + 75.1;
+        }
+
+        ctx.font = "15px Arial";
+        var i;
+        var j = -101;
+        ctx.rotate(90*Math.PI/180);
+
+        for (i = 0; i<30; i++) { 
+            ctx.fillText("|",j,-240);
+            j = j + 50;
+        }
+        ctx.rotate(-90*Math.PI/180);
+
+        // draw x- and y-axis
+        ctx.moveTo(0, 400);
+        ctx.lineTo(1000, 400);
+        ctx.moveTo(250, 500);
+        ctx.lineTo(250, 0);
+        ctx.stroke();        
 
 
+        function createTransform(domain, range){
+                // domain is a two-element array of the data bounds [domain_min, domain_max]
+                // range is a two-element array of the screen bounds [range_min, range_max]
+                // this gives you two equations to solve:
+                // range_min = alpha * domain_min + beta
+                // range_max = alpha * domain_max + beta
+                    // a solution would be:   
+            
+            var domain_min = domain[0]
+            var domain_max = domain[1]
+            var range_min = range[0]
+            var range_max = range[1]
 
-        
-</script>
+            // formulas to calculate the alpha and the beta
+            var alpha = (range_max - range_min) / (domain_max - domain_min)
+            var beta = range_max - alpha * domain_max
+
+            // returns the function for the linear transformation (y= a * x + b)
+            return function(x){
+                return alpha * x + beta;
+            }
+        }
+
+
+    </script>
 </body>
+</html>
