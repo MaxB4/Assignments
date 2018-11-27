@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Page Title</title>
+    
+        <script type="text/javascript" src="https://d3js.org/d3.v5.min.js">
+        
+
+        
+        
+        </script>
+        <meta charset="utf-8">
+    </head>
+<body>
+    <h1>US Car Sales</h1>
+    <script> 
+    var margin = {top: 20, right: 10, bottom: 100, left:50},
+    width = 700 - margin.right - margin.left,
+    height = 500 - margin.top - margin.bottom;
+       
+
+    
+    d3.select("body")
+    .append("p").text("Student Name: Max Baneke")
+    .append("p").text("Student Number: 10797564")
+    .append("p").text("The dataset gives data on retail sales of light weight trucks in the US between 1976 and 2018 (seasonally adjusted). The boxplot visualizes the yearly sales.")
+
+    d3.select("body").append("p").text("text")
+    .attr("x", (width / 2))             
+    .attr("y", 0 - (margin.top / 2))
+    .attr("text-anchor", "middle")  
+    .style("font-size", "20px") 
+    .style("text-decoration", "underline")  
+    .text("Value vSs Date Graph");   
+    
+    d3.json("D3.json").then(function(data)
+        {
+        d3.select("body").selectAll("p")
+            .data(dataset)
+            .enter()
+            .append("p")
+            .text(function(d) { return d; });
+        })
+        console.log(d3)
+        </script>
+    <!-- This is where your bar chart will go -->
+    
+</body>
+</html>
