@@ -7,5 +7,5 @@ INPUT ="LTRUCKSA.csv"
 df = pd.read_csv(INPUT)
 
 # turn into JSON file
-df.set_index("DATE").to_json('d3.json', orient='index')
+df.set_index("DATE").to_json('carsales.json', orient='index')
 

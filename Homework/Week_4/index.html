@@ -52,27 +52,31 @@
                 return item["LTRUCKSA"]
             });
             console.log(salesValues)
+            console.log(yearValues)
 
             // initialize scale
             var xScale = d3.scaleLinear()
-                .domain([0, d3.max(salesValues, function (d) {
-                    return d[0];
-                })])
-                .range([padding, w - padding * 2]);
+                .domain([yearValues[0], d3.max(yearValues, function (d) {
+                    return d;
+                })]);
 
-            var yScale = d3.scaleLinear()
+            var yScale = d3.scaleOrdinal()
                 .domain([0, d3.max(salesValues, function (d) {
-                    return d[1];
+                    return d;
                 })])
                 .range([h - padding, padding]);
+                
 
+            // // define axes
+            // var xAxis = d3.axisBottom(xScale).tickFormat(function (d) {
+            //     return d.x;
+            // });
 
-            // define axes
-            var xAxis = d3.axisBottom(xScale).tickFormat(function (d) {
-                return d.x;
-            });
+            var xAxis = d3.axisBottom(xScale).ticks(d3.yearValues.every(1));
+            
+            // define y axis labels
+            var yAxis = d3.axisLeft(yScale)
 
-            var yAxis = d3.axisLeft(yScale);
 
             // create SVG element
             var svg = d3.select("body")
@@ -94,30 +98,29 @@
                     return i * (w / salesValues.length);
                 })
                 .attr("y", function (d) {
-                    return h - (d * 40);
+                    return h - (d * 39);
                 })
                 .attr("width", w / salesValues.length - padding)
                 .attr("height", function (d) {
-                    return d * 40;
+                    return d * 39;
                 });
 
             // create x axis labels
             svg.append("g")
                 .attr("class", "axis")
                 .attr("transform", "translate(0," + (h - padding) + ")")
-                .call(xAxis
-                    .ticks(30));
+                .call(xAxis);
             
             // create y axis labels
             svg.append("g")
                 .attr("class", "axis")
-                .attr("transform", "translate(0," + padding + ",0)")
-                .call(yAxis
-                    .ticks(10));
+                .attr("transform", "translate(0," + padding + ")")
+                .call(yAxis);
 
             // create name x axis
             svg.append("text")
                 .attr("transform", "translate(" + (w / 2) + " ," + (h + padding + 20) + ")")
+                .attr("y", margin.top)
                 .style("text-anchor", "middle")
                 .text("Year");
 
