@@ -1,7 +1,7 @@
 import pandas as pd
 
 # global standards
-INPUT ='LTRUCKSA.csv'
+INPUT ="LTRUCKSA.csv"
 
 # read input and put in dataframe
 df = pd.read_csv(INPUT)

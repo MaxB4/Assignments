@@ -1,49 +1,140 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title>Page Title</title>
-    
-        <script type="text/javascript" src="https://d3js.org/d3.v5.min.js">
-        
 
-        
-        
-        </script>
-        <meta charset="utf-8">
-    </head>
+<head>
+    <meta charset="utf-8">
+    <title>Page Title</title>
+    <script type="text/javascript" src="https://d3js.org/d3.v5.min.js"></script>
+    <style type="text/css">
+        .axis path,
+        .axis line {
+            fill: none;
+            stroke: black;
+            shape-rendering: crispEdges;
+        }
+
+        .axis test {
+            font-family: sans-serif;
+            font-size: 11px;
+        }
+    </style>
+</head>
+
 <body>
     <h1>US Car Sales</h1>
-    <script> 
-    var margin = {top: 20, right: 10, bottom: 100, left:50},
-    width = 700 - margin.right - margin.left,
-    height = 500 - margin.top - margin.bottom;
-       
+    <script type="text/javascript">
+        // global constants width and height
 
-    
-    d3.select("body")
-    .append("p").text("Student Name: Max Baneke")
-    .append("p").text("Student Number: 10797564")
-    .append("p").text("The dataset gives data on retail sales of light weight trucks in the US between 1976 and 2018 (seasonally adjusted). The boxplot visualizes the yearly sales.")
+        var margin = {
+                top: 20,
+                right: 20,
+                bottom: 50,
+                left: 70
+            },
+            w = 950 - margin.left - margin.right,
+            h = 500 - margin.top - margin.bottom;
+        var padding = 1;
 
-    d3.select("body").append("p").text("text")
-    .attr("x", (width / 2))             
-    .attr("y", 0 - (margin.top / 2))
-    .attr("text-anchor", "middle")  
-    .style("font-size", "20px") 
-    .style("text-decoration", "underline")  
-    .text("Value vSs Date Graph");   
-    
-    d3.json("D3.json").then(function(data)
-        {
-        d3.select("body").selectAll("p")
-            .data(dataset)
-            .enter()
-            .append("p")
-            .text(function(d) { return d; });
-        })
-        console.log(d3)
-        </script>
+
+        d3.select("body")
+            .append("p").text("Student Name: Max Baneke")
+            .append("p").text("Student Number: 10797564")
+            .append("p").text(
+                "The dataset gives data on retail sales of light weight trucks in the US between 1976 and 2018 (seasonally adjusted). The boxplot visualizes the yearly sales."
+            )
+
+        // read json file
+        d3.json("carsales.json").then(function (salesData) {
+            var yearValues = Object.keys(salesData).map(function (item) {
+                return item.substring(0, 4)
+            });
+            var salesValues = Object.values(salesData).map(function (item) {
+                return item["LTRUCKSA"]
+            });
+            console.log(salesValues)
+
+            // initialize scale
+            var xScale = d3.scaleLinear()
+                .domain([0, d3.max(salesValues, function (d) {
+                    return d[0];
+                })])
+                .range([padding, w - padding * 2]);
+
+            var yScale = d3.scaleLinear()
+                .domain([0, d3.max(salesValues, function (d) {
+                    return d[1];
+                })])
+                .range([h - padding, padding]);
+
+
+            // define axes
+            var xAxis = d3.axisBottom(xScale).tickFormat(function (d) {
+                return d.x;
+            });
+
+            var yAxis = d3.axisLeft(yScale);
+
+            // create SVG element
+            var svg = d3.select("body")
+                .append("svg")
+                .attr("width", w + margin.left + margin.right)
+                .attr("height", h + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+            // create squares
+            svg.selectAll("rect")
+                .data(salesValues)
+                .enter()
+                .append("rect")
+                .attr("fill", function (d) {
+                    return "rgb(" + (d * 15) + ", 0, 0)";
+                })
+                .attr("x", function (d, i) {
+                    return i * (w / salesValues.length);
+                })
+                .attr("y", function (d) {
+                    return h - (d * 40);
+                })
+                .attr("width", w / salesValues.length - padding)
+                .attr("height", function (d) {
+                    return d * 40;
+                });
+
+            // create x axis labels
+            svg.append("g")
+                .attr("class", "axis")
+                .attr("transform", "translate(0," + (h - padding) + ")")
+                .call(xAxis
+                    .ticks(30));
+            
+            // create y axis labels
+            svg.append("g")
+                .attr("class", "axis")
+                .attr("transform", "translate(0," + padding + ",0)")
+                .call(yAxis
+                    .ticks(10));
+
+            // create name x axis
+            svg.append("text")
+                .attr("transform", "translate(" + (w / 2) + " ," + (h + padding + 20) + ")")
+                .style("text-anchor", "middle")
+                .text("Year");
+
+            // create name y axis 
+            svg.append("text")
+                .attr("transform", "rotate(-90)")
+                .attr("y", 0 - margin.left)
+                .attr("x", 0 - (h / 2))
+                .attr("dy", "1em")
+                .style("text-anchor", "middle")
+                .text("Millions of Units");
+
+
+        });
+    </script>
     <!-- This is where your bar chart will go -->
-    
+
 </body>
+
 </html>
