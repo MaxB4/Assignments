@@ -56,7 +56,7 @@ window.onload = function () {
         d3.select("body")
             .append("p").text("Student Name: Max Baneke")
             .append("p").text("Student Number: 10797564")
-            .append("p").text("This boxplot provides data on the women in science and consumer confidence in different countries")
+            .append("p").text("This scatterplot provides data on women in science and consumer confidence in different countries")
 
         // global constants
         var margin = {
