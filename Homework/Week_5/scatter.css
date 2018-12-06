@@ -20,12 +20,3 @@ body {
     stroke: #C0C0BB;
   }
   
-  .axis-label {
-    font-size: 10em;
-    fill: #8E8883;
-  }
-  
-  .title {
-    font-size: 3.7em;
-    fill: #635F5D;
-  }
