@@ -20,8 +20,6 @@ window.onload = function() {
         var data = response[0];
         var GDP = response[1];
 
-        // var format = d3.format(",");
-
         // get gdp data and put in list
         Country_GDP = []
         Country = [];
@@ -129,11 +127,15 @@ window.onload = function() {
             // load line chart of country when clicked on
             .on('click', function(d){
                 d3.select("#chart > *").remove()
-                var data = [];
                 if(Country.includes(d.properties.name)){
-                    var location = Country.indexOf(d.properties.name)
-                    HistoricGDP = historicGDP[location]
-                    data.push({name: d.properties.name, value: HistoricGDP})
+                    var location = Country.indexOf(d.properties.name);
+                    var data = [{year: 1967, gdp: historicGDP[location][0]},
+                                {year: 1977, gdp: historicGDP[location][1]},
+                                {year: 1987, gdp: historicGDP[location][2]},
+                                {year: 1997, gdp: historicGDP[location][3]},
+                                {year: 2007, gdp: historicGDP[location][4]},
+                                {year: 2017, gdp: historicGDP[location][5]}];
+                    
                     createLinechart(data)
                     return(data)
                 }
@@ -177,9 +179,7 @@ function createLinechart(data) {
     var margin = {top: 50, right: 50, bottom: 50, left: 50}
     , width = window.innerWidth - margin.left - margin.right 
     , height = window.innerHeight - margin.top - margin.bottom; 
-    
-    // number of datapoints
-    var n = 6;
+    padding = 20;
 
     // add SVG 
     var svg = d3.select("#chart")
@@ -191,63 +191,59 @@ function createLinechart(data) {
 
     // X scale
     var xScale = d3.scaleLinear()
-        .domain([1967, 2017]) // input
-        .range([0, width]); // output
+        .domain([1967, 2017])
+        .range([0, width]);
    
     // Y scale 
     var yScale = d3.scaleLinear()
-        .domain([0, 20000]) // input 
-        .range([height, 0]); // output 
+        .domain([0, data[5].gdp])
+        .range([height, 0]);
 
     // X axis
     svg.append("g")
        .attr("class", "x axis")
        .attr("transform", "translate(0," + height + ")")
        .call(d3.axisBottom(xScale));
-    
+            
+    // title x axis
+    svg.append("text")
+        .attr("transform", "translate(" + (width / 2) + " ," + (height + padding + 20) + ")")
+        .attr("class", "x axis", margin.top)
+        .style("text-anchor", "middle")
+        .text("Year");
+
     // Y axis
     svg.append("g")
         .attr("class", "y axis")
         .call(d3.axisLeft(yScale));
     
-        
-    // select data from dictonary
-        // testdata = []
-        // for (i = 2000; i < 2017; i++) {
-        
-        // lifeAndTime = Object.values(life[country])[i - 2000];
-        // var obj = {};
-        // obj['year'] = i;
-        // obj['lifeexp'] = lifeAndTime;
-        // testdata.push(obj)
-        
-        // }
-        
-        // var dataset = testdata    
-
-    console.log(data)
+    // title y axis
+    svg.append("text")
+    .attr("dy", "-1.2em")
+    .style("text-anchor", "middle")
+    .text("GDP (Billions)");
 
     // create line
-    var line = d3.line()
-        .x(function(d) { return xScale(d.year); })
-        .y(function(d) { return yScale(d.GDP); })
-        .curve(d3.curveMonotoneX);
+    const line = d3.line()
+    .x(d => xScale(d.year))
+    .y(d => yScale(d.gdp))
+    .curve(d3.curveMonotoneX);
    
-    // append path
-    svg.append("path")
-        .datum(data)
-        .attr("class", "line") 
-        .attr("d", line); 
-    
-    // add a circle for each datapoint 
-    svg.selectAll(".dot")
+    svg.append('path')
+      .datum(data)
+      .style('stroke','#D073BA')
+      .style('stroke-width', 2)
+      .style('fill', 'none')
+      .attr('d', line)
+
+    svg.selectAll('circle')
         .data(data)
         .enter()
-        .append("circle")
-        .attr("class", "dot")
-        .attr("cx", function(d) { return xScale(d.year) })
-        .attr("cy", function(d) { return yScale(d.GDP) })
-        .attr("r", 5)
+        .append('circle')
+        .attr('class', 'circle')
+        .attr('cx', d => xScale(d.year))
+        .attr('cy', d => yScale(d.gdp))
+        .attr('r', 3)
         .on("mouseover", function(a, b, c) { 
                 console.log(a) 
             this.attr('class', 'focus')
