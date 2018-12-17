@@ -1,11 +1,11 @@
 import pandas as pd
 
 # global standards
-INPUT ="LTRUCKSA.csv"
+INPUT ="GDPcountries.csv"
 
 # read input and put in dataframe
 df = pd.read_csv(INPUT)
 
 # turn into JSON file
-df.set_index("DATE").to_json('carsales.json', orient='index')
+df.set_index("Country Name").to_json('GDPcountries.json', orient='index')
 
